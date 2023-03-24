@@ -8,29 +8,34 @@ const abi = inboxContractFile.abi;
 
 const provider = new HDWalletProvider({
     mnemonic: {
-        phrase: config.secret.walletPhrase,
+        phrase: config.wallet.phrase,
     },
-    providerOrUrl: config.secret.providerUrl,
+    providerOrUrl: config.wallet.providerUrl,
 });
 
 const web3 = new Web3(provider);
 
 async function deploy() {
-    const accounts = await web3.eth.getAccounts();
-
-    console.log("Attempting to deploy from account", accounts[0]);
-
     try {
+        const accounts = await web3.eth.getAccounts();
+        const account = accounts.find((account) => account === config.wallet.account);
+
+        if (!account) throw new Error("no account");
+
+        console.log("Attempting to deploy from account:", account);
+
         const inbox = await new web3.eth.Contract(abi)
             .deploy({ data: bytecode, arguments: ["Hi There!"] })
-            .send({ from: accounts[0], gas: "1500000" });
+            .send({ from: account, gas: "1000000" });
 
         console.log("Contract deployed", inbox.options.address);
     } catch (e) {
         console.log(e);
-        process.exit();
     }
 }
 
-deploy();
+(async function main() {
+    await deploy();
+})();
+
 provider.engine.stop();

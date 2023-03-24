@@ -1,24 +1,22 @@
 const assert = require("assert");
 const ganache = require("ganache-cli");
 const Web3 = require("web3");
-
 const inboxContractFile = require("../src/compile");
-const bytecode = inboxContractFile.evm.bytecode.object;
-const abi = inboxContractFile.abi;
 
-const provider = ganache.provider();
-const web3 = new Web3(provider);
 let account;
 let inbox;
 
 describe("Test contract", () => {
     beforeEach(async () => {
-        const initialMessage = "Good morning!";
+        const provider = ganache.provider();
+        const web3 = new Web3(provider);
         const allAccounts = await web3.eth.getAccounts();
         account = allAccounts[0];
 
+        const bytecode = inboxContractFile.evm.bytecode.object;
+        const abi = inboxContractFile.abi;
         inbox = await new web3.eth.Contract(abi)
-            .deploy({ data: bytecode, arguments: [initialMessage] })
+            .deploy({ data: bytecode, arguments: ["Good morning!"] })
             .send({ from: account, gas: "1000000" });
     });
 
