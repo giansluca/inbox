@@ -10,8 +10,7 @@ describe("Test contract", () => {
     beforeEach(async () => {
         const provider = ganache.provider();
         const web3 = new Web3(provider);
-        const allAccounts = await web3.eth.getAccounts();
-        account = allAccounts[0];
+        account = (await web3.eth.getAccounts())[0];
 
         const bytecode = inboxContractFile.evm.bytecode.object;
         const abi = inboxContractFile.abi;
