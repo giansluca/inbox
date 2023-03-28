@@ -5,8 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "mocha",
-        "compile": "node src/compile",
-        "deploy": "node src/deploy"
+        "compile": "node scripts/compile",
+        "deploy": "node scripts/deploy"
     },
     "keywords": [],
     "author": "",

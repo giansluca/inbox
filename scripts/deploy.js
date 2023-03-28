@@ -35,7 +35,12 @@ async function deploy() {
 }
 
 (async function main() {
-    await deploy();
+    try {
+        await deploy();
+    } catch (e) {
+        console.error(e);
+        process.exitCode = 1;
+    }
 })();
 
 provider.engine.stop();
