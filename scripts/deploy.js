@@ -40,6 +40,8 @@ async function deploy() {
             .send({ from: account, gas: "1000000" });
 
         console.log("Contract deployed", inbox.options.address);
+
+        stop();
     } catch (e) {
         console.log(e);
     }
@@ -48,7 +50,6 @@ async function deploy() {
 (async function main() {
     try {
         await deploy();
-        stop();
     } catch (e) {
         console.error(e);
         process.exitCode = 1;
