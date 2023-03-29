@@ -6,17 +6,28 @@ const inboxContractFile = require("./compile");
 const bytecode = inboxContractFile.evm.bytecode.object;
 const abi = inboxContractFile.abi;
 
-const provider = new HDWalletProvider({
-    mnemonic: {
-        phrase: config.wallet.phrase,
-    },
-    providerOrUrl: config.wallet.providerUrl,
-});
+let provider;
+let web3;
 
-const web3 = new Web3(provider);
+function init() {
+    provider = new HDWalletProvider({
+        mnemonic: {
+            phrase: config.wallet.phrase,
+        },
+        providerOrUrl: config.wallet.providerUrl,
+    });
+
+    web3 = new Web3(provider);
+}
+
+function stop() {
+    provider.engine.stop();
+}
 
 async function deploy() {
     try {
+        init();
+
         const accounts = await web3.eth.getAccounts();
         const account = accounts.find((account) => account === config.wallet.account);
 
@@ -37,10 +48,9 @@ async function deploy() {
 (async function main() {
     try {
         await deploy();
+        stop();
     } catch (e) {
         console.error(e);
         process.exitCode = 1;
     }
 })();
-
-provider.engine.stop();
