@@ -1,5 +1,5 @@
 const assert = require("assert");
-const ganache = require("ganache-cli");
+const ganache = require("ganache");
 const Web3 = require("web3");
 const inboxContractFile = require("../scripts/compile");
 
@@ -8,7 +8,8 @@ let inbox;
 
 describe("Test contract", () => {
     beforeEach(async () => {
-        const provider = ganache.provider();
+        const options = { logging: { quiet: true } };
+        const provider = ganache.provider(options);
         const web3 = new Web3(provider);
         account = (await web3.eth.getAccounts())[0];
 
